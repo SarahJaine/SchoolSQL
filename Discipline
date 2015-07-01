@@ -1,0 +1,25 @@
+SELECT s.lastfirst,
+  ps_customfields.getcf('students',s.ID,'OLAMS_USI')usi,
+  pse.grade_level,
+  l.logtypeid,
+  l.entry_date,
+  l.entry_author,
+  l.discipline_incidentdate,
+  l.subtype,
+  gen.valuet,
+  l.discipline_actiontaken,
+  l.discipline_durationassigned,
+  l.consequence AS ossecategory,
+  l.discipline_actiontakendetail
+FROM students s
+JOIN ps_enrollment_all pse
+ON pse.studentid = s.ID
+JOIN LOG l
+ON s.ID = l.StudentID
+JOIN gen
+ON l.subtype = gen.VALUE
+WHERE pse.EntryDate BETWEEN ('26-AUG-13') AND ('30-JUN-15')
+AND pse.schoolid = 10999
+AND l.entry_date >= ('02-SEP-14')
+AND l.logtypeid  = -100000
+ORDER BY s.lastfirst

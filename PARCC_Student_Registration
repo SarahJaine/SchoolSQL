@@ -1,0 +1,17 @@
+SELECT ps_customfields.getcf('students',s.id,'olams_usi') AS olams_usi,
+s.student_number, s.schoolid, s.last_name, s.first_name, s.grade_level, 
+s.dob, s.gender,
+--add in additional demographic fields for race, ethnicity, ell, etc. See Student Registration template from PAnext for all needed fields
+(ps_customfields.getcf('students',s.id,'zSpEd')) AS zSpEd,
+ps_customfields.getcf('students',s.id,'xSpEdCat') AS Primary_Dis,
+c.credittype, c.course_name, c.course_number
+FROM students s
+LEFT OUTER JOIN cc
+ON cc.studentid=s.id
+JOIN courses c
+on cc.course_number=c.course_number
+--termid should be changed depending on year
+where s.schoolid=10999 AND cc.termid>=2400 AND cc.sectionid>0 
+--in future years you may need to check that course_numbers are the same for Edgenuity and honors classes
+AND (c.course_number='HSELA200' OR c.course_number='HSMATH200')
+ORDER BY s.last_name, s.first_name, c.course_number

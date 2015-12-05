@@ -1,0 +1,14 @@
+SELECT s.student_number,
+  ps_customfields.getcf('students',s.id,'olams_usi')usi,
+--I added participant site id in this query for match to YALC reengaged list  
+  ps_customfields.getcf('students',s.id,'ETO_StudentID')ETO_StudentID,
+  s.lastfirst,
+  DECODE(s.enroll_status,-1,'pre-enroll',0,'enrolled',2,'exited',3,'graduated')CurrentStatus
+FROM students s
+RIGHT OUTER JOIN ps_enrollment_all pse
+ON pse.studentid  =s.id
+WHERE PSE.schoolid=10999
+AND PSE.entrycode<>1800
+AND PSE.entrydate BETWEEN ('01-AUG-2015') AND ('30-JUN-2016')
+AND PSE.entrydate<pse.exitdate
+ORDER BY s.lastfirst

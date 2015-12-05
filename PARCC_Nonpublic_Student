@@ -1,0 +1,16 @@
+SELECT ps_customfields.getcf('students',s.id,'olams_usi') AS olams_usi,
+  s.student_number,
+  s.schoolid,
+  s.last_name,
+  s.first_name,
+  s.grade_level,
+--add in additional demographic fields for race, ethnicity, ell, etc. See Student Registration template from PAnext for all needed fields
+  (ps_customfields.getcf('students',s.id,'zPlacementStatus'))   AS zplacestat,
+  (ps_customfields.getcf('students',s.id,'zPlacementLocation')) AS Testing_School_Name,
+  (ps_customfields.getcf('students',s.id,'zSpEd'))              AS zSpEd,
+  ps_customfields.getcf('students',s.id,'xSpEdCat')             AS Primary_Dis
+FROM students s
+WHERE s.schoolid                                                 =10999
+AND (ps_customfields.getcf('students',s.id,'zPlacementStatus')) IS NOT NULL
+ORDER BY s.last_name,
+  s.first_name

@@ -1,0 +1,21 @@
+SELECT ps_customfields.getcf('students',s.id,'OLAMS_USI')USI,
+  s.student_number,
+  s.first_name,
+  s.last_name,
+  s.DOB,
+  ps_customfields.getcf('students',s.id,'zplacementstatus')placed,
+  ps_customfields.getcf('students',s.id,'HS_YearGrade9')HS_YearGrade9,
+  DECODE(s.enroll_status,-1,'pre-enroll',0,'enrolled',2,'exited',3,'graduated')CurrentStatus,
+--From here down is each year of HS enrollment.  You'll see the data in the above columns repeated for each row
+  DECODE(pse.yearid,23,'2013',24,'2014',25,'2015',26,'2016')YEAR,
+  pse.grade_level,
+  pse.entrydate,
+  pse.exitdate,
+  pse.exitcode
+FROM students s
+RIGHT OUTER JOIN ps_enrollment_all pse
+ON pse.studentid  =s.id
+WHERE PSE.schoolid=10999
+AND ps_customfields.getcf('students',s.id,'HS_YearGrade9')=2013
+AND PSE.entrydate BETWEEN ('01-AUG-2010') AND ('30-JUN-2019')
+AND PSE.entrydate<pse.exitdate

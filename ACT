@@ -1,0 +1,25 @@
+SELECT ps_customfields.getcf('students',s.id,'OLAMS_USI')USI,
+  s.student_number,
+  s.schoolid,
+  s.lastfirst,
+  st.grade_level AS "test grade_level",
+  t.name,
+  st.test_date,
+  ts.id,
+  ts.name      AS testscorename,
+  sts.numscore AS NumValue
+FROM studenttestscore sts
+JOIN students s
+ON sts.studentid=s.id
+JOIN studenttest st
+ON sts.studenttestid=st.id
+JOIN testscore ts
+ON sts.testscoreid=ts.id
+JOIN test t
+ON ts.testid    =t.id
+WHERE ts.testid ='8' and ts.id=16
+AND s.entrydate>='01-AUG-2014'
+ORDER BY s.student_number,
+  s.lastfirst ASC,
+  st.test_date,
+  ts.name

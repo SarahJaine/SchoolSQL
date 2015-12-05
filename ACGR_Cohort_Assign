@@ -1,0 +1,27 @@
+SELECT st.student_number,
+  st.lastfirst,
+  sg.course_name,
+  sg.sectionid,
+  sg.grade_level,
+  sg.termid,
+  DECODE(sg.termid,sg.termid,FLOOR(sg.termid/100+1990))Store_Grade_Year,
+  sg.schoolname,
+  MAX(
+  CASE
+    WHEN sg.storecode='Y1'
+    THEN sg.grade
+    ELSE NULL
+  END) AS Letter_Grade
+FROM students st
+JOIN storedgrades sg
+ON st.id            =sg.studentid
+WHERE sg.grade_level=9
+AND ps_customfields.getcf('students',st.id,'HS_YearGrade9') IS Null
+GROUP BY st.lastfirst,
+  st.student_number,
+  sg.termid,
+  sg.course_name,
+  sg.sectionid,
+  sg.grade_level,
+  sg.schoolname
+ORDER BY st.lastfirst
